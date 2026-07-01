@@ -1,4 +1,4 @@
-﻿<#
+<#
 Script PowerShell
 ---------------------------------------------------------------------------------
 Nome: InventarioDiretorios.ps1
@@ -22,14 +22,20 @@ Autor:
 Denilly Carvalho do Carmo
 
 Versão:
-1.0
+1.1
 
 Uso:
-1. Defina o caminho UNC:
-   $caminho = "\\servidor\compartilhamento\pasta"
+O script pode ser executado de duas formas:
 
-2. Execute:
-   .\InventarioDiretorios.ps1
+1. Via linha de comando (com parâmetro):
+   .\InventarioDiretorios.ps1 -caminho "\\servidor\compartilhamento\pasta"
+
+2. Execução direta (duplo clique):
+   Ao executar o script sem parâmetro, será solicitado informar o caminho UNC
+   diretamente no prompt exibido.
+
+Exemplo de caminho:
+\\servidor\compartilhamento\pasta
 
 Saídas:
 • pastas.csv → lista de diretórios
@@ -42,18 +48,31 @@ Observações:
 
 ---------------------------------------------------------------------------------
 #>
-
-$erros = @()
-
-#  1. =========== CONFIGURAÇÕES GERAIS - AJUSTE AS LINHAS COM "<--" CONFORME AMBIENTE ===========
-# Informe o Caminho UNC (normal)
-$caminho = "\\servidor\compartilhamento\pasta" # <--
-
 # ----------------------------------------------------------------------------------------------
 # NÃO ALTERE A PARTIR DAQUI!!!
 # ----------------------------------------------------------------------------------------------
 
-# 2. ==================== EXECUÇÃO PRINCIPAL DO SCRIPT ====================
+param (
+    [string]$caminho
+)
+
+$erros = @()
+
+# 1. ==================== EXECUÇÃO PRINCIPAL DO SCRIPT ====================
+# Caminho UNC (normal)
+# Se não foi informado via parâmetro, pede ao usuário
+if (-not $caminho) {
+    Write-Host "Informe o caminho do diretório (UNC):" -ForegroundColor Yellow
+    $caminho = Read-Host "Exemplo: \\servidor\compartilhamento\pasta"
+
+    if (-not $caminho) {
+        Write-Host "`nNenhum caminho informado. Execução cancelada." -ForegroundColor Red
+        Write-Host "`nPressione qualquer tecla para sair..."
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        exit 1
+    }
+}
+
 # Converte automaticamente para caminho longo (\\?\UNC\)
 $caminhoLongo = if ($caminho -match '^\\\\') {
     "\\?\UNC\" + $caminho.TrimStart('\')
