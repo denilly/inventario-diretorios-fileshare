@@ -31,17 +31,21 @@ O volume é calculado utilizando **Robocopy em modo simulação**, garantindo re
 
 ## ▶️ Como usar
 
-### 1. Definir o caminho
-
-Edite a variável no script:
+### 1. Executar informando o caminho via parâmetro
 
 ```powershell
-$caminho = "\\servidor\compartilhamento\pasta"
+.\InventarioDiretorios.ps1 -caminho "\\servidor\compartilhamento\pasta"
+````
+
+ou
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\InventarioDiretorios.ps1 -caminho "\\servidor\compartilhamento\pasta"
 ```
 
 ***
 
-### 2. Executar o script
+### 2. Executar sem parâmetros (modo interativo)
 
 ```powershell
 .\InventarioDiretorios.ps1
@@ -52,6 +56,14 @@ ou
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\InventarioDiretorios.ps1
 ```
+
+Ao iniciar sem o parâmetro `-caminho`, o script solicitará que o usuário informe o caminho UNC desejado:
+
+```text
+Informe o caminho do diretório (UNC):
+Exemplo: \\servidor\compartilhamento\pasta
+```
+
 
 ***
 
